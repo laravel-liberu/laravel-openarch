@@ -9,9 +9,6 @@ class OpenArchService
     public $response;
 
     /**
-     * @param string $_name
-     * @param int $_page
-     * @param int $_perPage
      * @return mixed
      * @throws OpenArchException
      */
@@ -25,12 +22,12 @@ class OpenArchService
                 'number_show' => $_perPage, // 100
                 'start' => ($_perPage * $_page) - $_perPage, // 2,
             ]]);
-        } catch (GuzzleException $e) {
+        } catch (GuzzleException) {
             throw new OpenArchException('Unable to connect to '. config('open-arch.records'));
         }
 
         if($this->verify()){
-            return json_decode($this->response->getBody(), true);
+            return json_decode((string) $this->response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         }
         throw new OpenArchException('Something went wrong', 500);
 
